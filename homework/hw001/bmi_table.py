@@ -1,18 +1,29 @@
 # health.txt를 읽어 BMI를 계산하고 Turtle로 표를 그리는 프로그램
 #
-# 실행 방법: hw001 폴더에서  python bmi_table.py
+# 실행 방법: python bmi_table.py            (창에 표 출력)
+#           python bmi_table.py --save     (표를 그린 뒤 result.png로 저장, Pillow 필요)
 
+import os
+import sys
 import turtle
 from bmi import read_health_file
+
+# 어느 폴더에서 실행해도 이 파일 옆의 health.txt를 읽도록 경로를 만든다
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_FILE = os.path.join(BASE_DIR, "health.txt")
+RESULT_FILE = os.path.join(BASE_DIR, "result.png")
 
 # 표의 제목 줄과 각 칸의 너비
 HEADERS = ["전화번호", "이름", "키(cm)", "몸무게(kg)", "BMI", "소견"]
 COL_WIDTHS = [170, 100, 100, 120, 90, 100]
 ROW_HEIGHT = 36
+MARGIN = 40                             # 표 바깥 여백
+TITLE_SPACE = 60                        # 표 위 제목 공간
 
 # 글꼴 (크기를 음수로 쓰면 픽셀 단위라 화면 배율이 달라도 칸에 맞게 나온다)
 TITLE_FONT = ("맑은 고딕", -26, "bold")
 CELL_FONT = ("맑은 고딕", -16, "normal")
+LEGEND_FONT = ("맑은 고딕", -13, "normal")
 
 
 def draw_rect(t, x, y, width, height, color):
@@ -38,6 +49,13 @@ def write_text(t, x, y, text, font, color):
     t.goto(x, y - 10)                   # 글자가 칸 세로 가운데 오도록 조금 내린다
     t.color(color)
     t.write(text, align="center", font=font)
+
+
+def fmt_number(value):
+    """175.0처럼 정수인 값은 175로, 아니면 소수 첫째 자리까지 글자로 만든다."""
+    if value == int(value):
+        return str(int(value))
+    return str(round(value, 1))
 
 
 def category_color(category):
@@ -83,7 +101,7 @@ def draw_table(t, records):
     # 데이터 줄
     for i in range(len(records)):
         phone, name, height, weight, bmi, category = records[i]
-        cells = [phone, name, str(height), str(weight), str(round(bmi, 1)), category]
+        cells = [phone, name, fmt_number(height), fmt_number(weight), f"{bmi:.1f}", category]
 
         if i % 2 == 0:                  # 줄무늬 배경
             bg_color = "white"
@@ -93,13 +111,51 @@ def draw_table(t, records):
         row_top = top - ROW_HEIGHT * (i + 1)
         draw_row(t, left, row_top, cells, bg_color, "black")
 
+    # 표 아래 소견 기준(범례)
+    legend = "소견 기준(WHO): 저체중 < 18.5 ≤ 정상 < 25 ≤ 과체중 < 30 ≤ 비만"
+    table_bottom = top - ROW_HEIGHT * (len(records) + 1)
+    write_text(t, 0, table_bottom - 20, legend, LEGEND_FONT, "gray")
+
+
+def save_screenshot(screen, path):
+    """Turtle 창을 맨 앞으로 올린 뒤 그림 영역을 캡처해 PNG로 저장한다."""
+    from PIL import ImageGrab           # pip install pillow
+
+    canvas = screen.getcanvas()
+    window = canvas.winfo_toplevel()
+    window.attributes("-topmost", True) # 다른 창에 가려진 채로 찍히지 않게
+    window.lift()
+    window.update()
+
+    x = canvas.winfo_rootx()
+    y = canvas.winfo_rooty()
+    w = canvas.winfo_width()
+    h = canvas.winfo_height()
+    ImageGrab.grab(bbox=(x, y, x + w, y + h)).save(path)
+    print("결과 화면 저장:", path)
+
 
 def main():
-    records = read_health_file("health.txt")
+    if sys.platform == "win32":
+        # 고해상도 화면에서 글자가 흐려지거나 캡처 위치가 어긋나지 않게 한다
+        try:
+            import ctypes
+            ctypes.windll.shcore.SetProcessDpiAwareness(1)
+        except Exception:
+            pass
+
+    records = read_health_file(DATA_FILE)
+    if len(records) == 0:
+        print("health.txt에 표시할 데이터가 없습니다.")
+        return
+
+    # 데이터 줄 수에 맞춰 창 크기를 정한다
+    width = sum(COL_WIDTHS) + MARGIN * 2
+    height = ROW_HEIGHT * (len(records) + 1) + TITLE_SPACE + MARGIN * 2 + 20
 
     screen = turtle.Screen()
     screen.title("BMI 계산 결과")
-    screen.setup(800, 500)
+    screen.setup(width + 20, height + 20)
     screen.tracer(0)                    # 그리는 과정을 생략하고 한 번에 보여준다
 
     t = turtle.Turtle()
@@ -107,7 +163,16 @@ def main():
     draw_table(t, records)
 
     screen.update()
+
+    if "--save" in sys.argv:
+        # 창이 완전히 뜰 때까지 잠시 기다렸다가 저장하고 창을 닫는다
+        def save_and_close():
+            save_screenshot(screen, RESULT_FILE)
+            screen.bye()
+        screen.ontimer(save_and_close, 800)
+
     turtle.done()
 
 
-main()
+if __name__ == "__main__":
+    main()
