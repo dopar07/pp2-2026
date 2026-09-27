@@ -1,2 +1,5 @@
 hello.
 __pycache__/
+
+# 강의 자료 (저작권)
+*.pdf

@@ -13,21 +13,21 @@ def Chose_BMI_Category(bmi: float) -> str:
         return "과체중"
     else:
         return "비만"
-    
+
 def test_Calculate_BMI():
     for i in range(3):
         name = input("이름을 입력하세요: ")
-        weight, height = map(float, input("체중(kg)과 키(m)를 입력하세요(예: 82 1.8): ").split())
+        try:
+            weight, height = map(float, input("체중(kg)과 키(m)를 입력하세요(예: 82 1.8): ").split())
+        except ValueError:
+            print("체중과 키를 숫자 두 개로 입력하세요.")
+            continue
         bmi = Calculate_BMI(weight, height)
         category = Chose_BMI_Category(bmi)
-        print(f"BMI: {bmi}")
+        print(f"{name}님의 BMI: {bmi:.2f}")
         print(f"Category: {category}")
-        print("그만하시겠습니까? (y/n): ")
-        if input().lower() == 'y':
+        if input("그만하시겠습니까? (y/n): ").lower() == 'y':
             break
 
-name = []
-height = []
-weight = []
-
-test_Calculate_BMI()   
+if __name__ == "__main__":
+    test_Calculate_BMI()

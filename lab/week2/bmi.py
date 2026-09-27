@@ -17,7 +17,8 @@ def Chose_BMI_Category(bmi: float) -> str:
 def test_Calculate_BMI():
     bmi = Calculate_BMI(82, 1.8)
     category = Chose_BMI_Category(bmi)
-    print(f"BMI: {bmi}")
+    print(f"BMI: {bmi:.2f}")
     print(f"Category: {category}")
 
-test_Calculate_BMI()      
+if __name__ == "__main__":
+    test_Calculate_BMI()      
