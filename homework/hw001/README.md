@@ -30,8 +30,7 @@
 health.txt ──▶ read_health_file() ──▶ 레코드 목록 ──▶ draw_table() ──▶ Turtle 창
                  │ 줄 단위 파싱                         │ 배경/격자/글자
                  │ calculate_bmi()                      │ 소견별 색상
-
-                 └ bmi_category()                       └ (--save 시 result.png 저장)
+                 └ bmi_category()
 ```
 
 ### BMI 계산 및 소견 기준
@@ -60,7 +59,7 @@ health.txt ──▶ read_health_file() ──▶ 레코드 목록 ──▶ dra
 | 파일 | 설명 |
 |---|---|
 | `bmi.py` | BMI 계산(`calculate_bmi`), 소견 판정(`bmi_category`), 파일 읽기(`read_health_file`) 함수와 테스트 함수(`test_bmi`) |
-| `bmi_table.py` | 프로그램 실행 파일. `health.txt`를 읽어 Turtle로 표를 그린다. `--save` 옵션을 주면 화면을 `result.png`로 저장 |
+| `bmi_table.py` | 프로그램 실행 파일. `health.txt`를 읽어 Turtle로 표를 그린다 |
 | `health.txt` | 입력 데이터 (전화번호, 이름, 키, 몸무게) |
 | `result.png` | 실행 결과 화면 캡처 |
 
@@ -78,7 +77,6 @@ health.txt ──▶ read_health_file() ──▶ 레코드 목록 ──▶ dra
 - `category_color()` : 소견에 따라 글자 색을 정한다.
 - `fmt_number()` : `175.0` 같은 값을 `175`로 보기 좋게 바꾼다.
 - `draw_table()` : 제목, 헤더 줄, 데이터 줄(줄무늬), 범례 순서로 표 전체를 그린다.
-- `save_screenshot()` : Turtle 창을 맨 앞으로 올린 뒤 그림 영역을 캡처해 PNG로 저장한다. (Pillow 사용)
 
 ## 5. 실행 방법
 
@@ -86,7 +84,6 @@ health.txt ──▶ read_health_file() ──▶ 레코드 목록 ──▶ dra
 cd homework/hw001
 python bmi.py                 # BMI 함수 테스트
 python bmi_table.py           # 표 출력 (창을 닫으면 종료)
-python bmi_table.py --save    # 표 출력 후 result.png 저장 (Pillow 필요: pip install pillow)
 ```
 
 ## 6. 실행 결과

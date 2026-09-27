@@ -1,17 +1,9 @@
 # health.txt를 읽어 BMI를 계산하고 Turtle로 표를 그리는 프로그램
 #
-# 실행 방법: python bmi_table.py            (창에 표 출력)
-#           python bmi_table.py --save     (표를 그린 뒤 result.png로 저장, Pillow 필요)
+# 실행 방법: hw001 폴더에서  python bmi_table.py
 
-import os
-import sys
 import turtle
 from bmi import read_health_file
-
-# 어느 폴더에서 실행해도 이 파일 옆의 health.txt를 읽도록 경로를 만든다
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_FILE = os.path.join(BASE_DIR, "health.txt")
-RESULT_FILE = os.path.join(BASE_DIR, "result.png")
 
 # 표의 제목 줄과 각 칸의 너비
 HEADERS = ["전화번호", "이름", "키(cm)", "몸무게(kg)", "BMI", "소견"]
@@ -117,34 +109,8 @@ def draw_table(t, records):
     write_text(t, 0, table_bottom - 20, legend, LEGEND_FONT, "gray")
 
 
-def save_screenshot(screen, path):
-    """Turtle 창을 맨 앞으로 올린 뒤 그림 영역을 캡처해 PNG로 저장한다."""
-    from PIL import ImageGrab           # pip install pillow
-
-    canvas = screen.getcanvas()
-    window = canvas.winfo_toplevel()
-    window.attributes("-topmost", True) # 다른 창에 가려진 채로 찍히지 않게
-    window.lift()
-    window.update()
-
-    x = canvas.winfo_rootx()
-    y = canvas.winfo_rooty()
-    w = canvas.winfo_width()
-    h = canvas.winfo_height()
-    ImageGrab.grab(bbox=(x, y, x + w, y + h)).save(path)
-    print("결과 화면 저장:", path)
-
-
 def main():
-    if sys.platform == "win32":
-        # 고해상도 화면에서 글자가 흐려지거나 캡처 위치가 어긋나지 않게 한다
-        try:
-            import ctypes
-            ctypes.windll.shcore.SetProcessDpiAwareness(1)
-        except Exception:
-            pass
-
-    records = read_health_file(DATA_FILE)
+    records = read_health_file("health.txt")
     if len(records) == 0:
         print("health.txt에 표시할 데이터가 없습니다.")
         return
@@ -163,14 +129,6 @@ def main():
     draw_table(t, records)
 
     screen.update()
-
-    if "--save" in sys.argv:
-        # 창이 완전히 뜰 때까지 잠시 기다렸다가 저장하고 창을 닫는다
-        def save_and_close():
-            save_screenshot(screen, RESULT_FILE)
-            screen.bye()
-        screen.ontimer(save_and_close, 800)
-
     turtle.done()
 
 
