@@ -1,7 +1,8 @@
 # health.txt를 읽어 BMI를 계산하고 Turtle로 표를 그리는 프로그램
 #
-# 실행 방법: hw001 폴더에서  python bmi_table.py
+# 실행 방법: python bmi_table.py  (어느 폴더에서 실행해도 된다)
 
+import os
 import turtle
 from bmi import read_health_file
 
@@ -110,7 +111,9 @@ def draw_table(t, records):
 
 
 def main():
-    records = read_health_file("health.txt")
+    # 실행 위치와 상관없이 이 파일과 같은 폴더의 health.txt를 읽는다
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "health.txt")
+    records = read_health_file(path)
     if len(records) == 0:
         print("health.txt에 표시할 데이터가 없습니다.")
         return
