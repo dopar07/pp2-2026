@@ -1,4 +1,4 @@
-    class Car:
+class Car:
     def __init__(self, maker, model, color, price):
         self.maker = maker
         self.model = model

@@ -18,7 +18,9 @@ pp2-2026/
 ├── lab/                 # 주차별 수업 실습
 │   ├── week2/           # 함수, 타입힌트, BMI 계산
 │   ├── week3/           # 리스트, 튜플·세트·딕셔너리, 연락처 미니프로젝트
-│   └── week4/           # 객체와 클래스
+│   ├── week4/           # 객체와 클래스
+│   ├── week5/           # 상속
+│   └── weak6/           # 파일과 예외처리
 └── homework/            # 과제
     └── hw001/           # HW01 BMI 계산 결과표 (Turtle GUI, 팀 과제)
 ```
@@ -31,6 +33,8 @@ pp2-2026/
 | [2주차](lab/week2/README.md) | 변수와 자료형, 함수 | `happy.py`, `bmi.py` | 함수 정의와 호출, 타입힌트, 테스트 함수 작성 |
 | [3주차](lab/week3/README.md) | 리스트, 튜플·세트·딕셔너리 | `listex.ipynb`, `collections.ipynb`, `typehint.ipynb`, `problem.py`, `miniproject.py` | 컬렉션 자료형 연산, 반복 입력 처리, 딕셔너리 기반 연락처 관리 |
 | 4주차 | 객체와 클래스 | `learn8.ipynb` | 클래스 정의, `Counter` 클래스 구현 |
+| 5주차 | 상속 | `learn12.ipynb`, `Car.py` | 상속과 `super()`, 메소드 오버라이딩, 다형성, 추상 클래스, 정적 멤버, 데코레이터 |
+| 6주차 | 파일과 예외처리 | `learn10.ipynb` | 텍스트·이진 파일 읽고 쓰기, CSV, `pickle`, 디렉토리 작업, 정규식, `try`/`except` |
 
 ## 과제
 
